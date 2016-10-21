@@ -1,0 +1,9 @@
+*.ipch
+*.tlog
+*.pdb
+*.obj
+*.pch
+/Server/Server/Debug
+/Client/Client/Debug
+/Server/Debug
+/Client/Debug
