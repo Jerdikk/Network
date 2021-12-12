@@ -13,7 +13,7 @@
 #include <windows.h>
 
 #define PORT 666
-#define SERVERADDR "192.168.10.101" //Звёздочками пометил свой IP
+#define SERVERADDR "127.0.0.1" //Звёздочками пометил свой IP
 
 int main(int argc, char* argv[])
 {

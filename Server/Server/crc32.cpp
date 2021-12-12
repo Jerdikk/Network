@@ -6,23 +6,25 @@
 class ECRC32 {
 public:
 	ECRC32();
-	static DWORD CRC32ByString(LPCTSTR, DWORD&);
-	static DWORD CRC32ByFile(LPCTSTR, DWORD&);
-	static DWORD CRC32ByStruct(BYTE*, DWORD, DWORD&);
+	//static DWORD CRC32ByString(LPCTSTR, DWORD&);
+	 DWORD CRC32ByFile(LPCTSTR, DWORD&);
+	 DWORD CRC32ByStruct(BYTE*, DWORD, DWORD&);
 
 private:
-	static bool GetFileSize(HANDLE, DWORD&);
-	static inline void GetCRC32(BYTE, DWORD&);
+	 bool GetFileSize(HANDLE, DWORD&);
+	 inline void GetCRC32(BYTE, DWORD&);
 
-	static DWORD CRC32Table[256];
+	 DWORD CRC32Table[256];
 };
 
-DWORD dwPolynomial = 0xEDB88320;
-DWORD* CRC32Table = new DWORD[256];
+
+
 
 ECRC32::ECRC32()
 
 {
+	DWORD dwPolynomial = 0xEDB88320;
+	//DWORD* CRC32Table = new DWORD[256];
 	DWORD dwCRC;
 	int i;
 	for (i = 0; i < 256; i++)
@@ -78,7 +80,8 @@ bool ECRC32::GetFileSize(const HANDLE hFile, DWORD &dwSize) {
 
 	try {
 		// SETS THE UPPER AND LOWER SIZE VALUES
-		dwSize = GetFileSize(hFile, NULL);
+		DWORD size;
+		dwSize = GetFileSize(hFile, size);
 
 		if (dwSize == INVALID_FILE_SIZE) {
 			bException = true;
@@ -97,13 +100,16 @@ bool ECRC32::GetFileSize(const HANDLE hFile, DWORD &dwSize) {
 
 DWORD ECRC32::CRC32ByFile(LPCTSTR strFileName, DWORD&)
 {
+	DWORD dwErrorCode=0;
+	DWORD dwCRC32;
+	HANDLE hFile;
 	// OPEN THE SPECIFIED FILE
 	if ((hFile = CreateFile(strFileName, GENERIC_READ,
 		FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL
 		| FILE_FLAG_SEQUENTIAL_SCAN, NULL)) == INVALID_HANDLE_VALUE)
 	{
 		// THIS MEANS THAT WE HAVE AN ERROR
-		dwErrorCode = -1;
+		dwCRC32 = -1;
 	}
 	// CALCULATE THE CRC32 SIGNATURE
 	else
@@ -121,4 +127,5 @@ DWORD ECRC32::CRC32ByFile(LPCTSTR strFileName, DWORD&)
 			bSuccess = ReadFile(hFile, cBuffer, sizeof(cBuffer), &dwBytesInOut, NULL);
 		}
 	}
+	return dwCRC32;
 }
