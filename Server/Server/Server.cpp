@@ -10,6 +10,7 @@
 #include <ws2tcpip.h>
 #include <stdio.h>
 #include <windows.h>
+#include "Packet.h"
 // link with ws2_32.lib
 #pragma comment(lib, "Ws2_32.lib")
 
@@ -31,6 +32,8 @@ int nclients = 0;
 int main(int argc, char* argv[])
 {
 	char buff[1024]; // Буфер для различных нужд
+
+	
 
 	printf("TCP SERVER DEMO\n");
 	// Шаг 1 - Инициализация Библиотеки Сокетов
@@ -154,13 +157,17 @@ DWORD WINAPI SexToClient(LPVOID client_socket)
 	// отправляем клиенту приветствие
 	send(my_sock, sHELLO, sizeof(sHELLO), 0);
 
+	char text[257];
 	// цикл эхо-сервера: прием строки от клиента и возвращение ее клиенту
 	int bytes_recv;
 	while ((bytes_recv = recv(my_sock, &buff[0], sizeof(buff), 0)) &&
 		bytes_recv != SOCKET_ERROR)
 	{
 		buff[bytes_recv + 1] = 0;
-		printf("%s", buff);
+		decode((MYPACKET*)&buff[0], &text[0]);
+		
+	//	printf("%s", buff);
+		printf("%s", text);
 		send(my_sock, &buff[0], bytes_recv, 0);		
 	}
 	

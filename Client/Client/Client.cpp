@@ -11,9 +11,12 @@
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <windows.h>
+#include "Packet.h"
 
 #define PORT 666
 #define SERVERADDR "127.0.0.1" //Звёздочками пометил свой IP
+
+
 
 int main(int argc, char* argv[])
 {
@@ -26,6 +29,9 @@ int main(int argc, char* argv[])
 		printf("WSAStart error %d\n", WSAGetLastError());
 		return -1;
 	}
+
+
+	MYPACKET* mp = new MYPACKET();
 
 	// Шаг 2 - создание сокета
 	SOCKET my_sock;
@@ -120,7 +126,7 @@ int main(int argc, char* argv[])
 
 	printf("Soedinenie s %s uspeshno ustanovlenno\n \
             Type quit for quit\n\n", SERVERADDR);
-
+	
 	// Шаг 4 - чтение и передача сообщений
 	int nsize;
 	while ((nsize = recv(my_sock, &buff[0], sizeof(buff) - 1, 0)) != SOCKET_ERROR)
@@ -128,11 +134,16 @@ int main(int argc, char* argv[])
 		// ставим завершающий ноль в конце строки
 		buff[nsize] = 0;
 
+		
+
+
 		// выводим на экран
 		printf("S=>C:%s", buff);
 
 		// читаем пользовательский ввод с клавиатуры
 		printf("S<=C:"); fgets(&buff[0], sizeof(buff) - 1, stdin);
+
+		
 
 		// проверка на "quit"
 		if (!strcmp(&buff[0], "quit\n"))
@@ -143,9 +154,11 @@ int main(int argc, char* argv[])
 			WSACleanup();
 			return 0;
 		}
-
+		delete mp;
+		mp = pack(buff);
 		// передаем строку клиента серверу
-		send(my_sock, &buff[0], strlen(&buff[0]), 0);
+		//send(my_sock, &buff[0], strlen(&buff[0]), 0);
+		send(my_sock, &mp->r.buffer[0], packetSize(mp), 0);
 	}
 	printf("Recv error %d\n", WSAGetLastError());
 	closesocket(my_sock);

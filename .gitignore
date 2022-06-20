@@ -7,3 +7,6 @@
 /Client/Client/Debug
 /Server/Debug
 /Client/Debug
+/.vs
+/Client/.vs/Client/v16
+/Server/.vs/Server/v16
