@@ -127,6 +127,7 @@ int main(int argc, char* argv[])
 	printf("Soedinenie s %s uspeshno ustanovlenno\n \
             Type quit for quit\n\n", SERVERADDR);
 	
+	char text[257];
 	// Шаг 4 - чтение и передача сообщений
 	int nsize;
 	while ((nsize = recv(my_sock, &buff[0], sizeof(buff) - 1, 0)) != SOCKET_ERROR)
@@ -134,11 +135,11 @@ int main(int argc, char* argv[])
 		// ставим завершающий ноль в конце строки
 		buff[nsize] = 0;
 
-		
+		decode((MYPACKET*)&buff[0], &text[0]);
 
 
 		// выводим на экран
-		printf("S=>C:%s", buff);
+		printf("S=>C:%s", text);
 
 		// читаем пользовательский ввод с клавиатуры
 		printf("S<=C:"); fgets(&buff[0], sizeof(buff) - 1, stdin);

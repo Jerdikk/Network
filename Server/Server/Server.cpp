@@ -168,6 +168,8 @@ DWORD WINAPI SexToClient(LPVOID client_socket)
 		
 	//	printf("%s", buff);
 		printf("%s", text);
+
+
 		send(my_sock, &buff[0], bytes_recv, 0);		
 	}
 	
